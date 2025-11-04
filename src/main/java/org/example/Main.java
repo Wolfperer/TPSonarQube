@@ -1,16 +1,19 @@
 package org.example;
 
-import java.sql.*;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
-    // TODO: Fix this later
-    private static String password = "admin123"; // Hardcoded password - security issue
-    private static Connection conn = null;
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+    private static final int DEFAULT_ITERATIONS = 10000;
+    
+    private Main() {
+        // Private constructor to hide implicit public one
+    }
     
     public static void main(String[] args) {
-        int iterations = 10000;
-        String unused = "This variable is never used"; // Unused variable
+        int iterations = DEFAULT_ITERATIONS;
 
         // Test de fonctionnalité
         System.out.println("=== Tests de fonctionnalité ===");
@@ -66,50 +69,34 @@ public class Main {
         return time / 1e9;
     }
     
-    // Method with SQL injection vulnerability
-    public static void unsafeQuery(String userInput) {
-        try {
-            Statement stmt = conn.createStatement();
-            String query = "SELECT * FROM users WHERE name = '" + userInput + "'"; // SQL Injection
-            ResultSet rs = stmt.executeQuery(query);
-            // Resource leak - ResultSet and Statement not closed
-        } catch (Exception e) {
-            e.printStackTrace(); // Bad practice: printing stack trace
-        }
-    }
-    
-    // Method with complexity issues
-    public static int complexMethod(int a, int b, int c, int d) {
+    // Simplified method with reduced cyclomatic complexity
+    public static int calculateSum(int a, int b, int c, int d) {
+        int sum = 0;
         if (a > 0) {
-            if (b > 0) {
-                if (c > 0) {
-                    if (d > 0) {
-                        return a + b + c + d;
-                    } else {
-                        return a + b + c;
-                    }
-                } else {
-                    return a + b;
-                }
-            } else {
-                return a;
-            }
-        } else {
-            return 0;
+            sum += a;
         }
+        if (b > 0) {
+            sum += b;
+        }
+        if (c > 0) {
+            sum += c;
+        }
+        if (d > 0) {
+            sum += d;
+        }
+        return sum;
     }
     
-    // Empty catch block
-    public static void methodWithEmptyCatch() {
+    // Proper exception handling with logging
+    public static void methodWithProperExceptionHandling() {
         try {
-            int result = 10 / 0;
-        } catch (Exception e) {
-            // TODO: handle exception
+            int denominator = 0;
+            if (denominator != 0) {
+                int result = 10 / denominator;
+                LOGGER.log(Level.INFO, "Result: {0}", result);
+            }
+        } catch (ArithmeticException e) {
+            LOGGER.log(Level.SEVERE, "Arithmetic error occurred", e);
         }
-    }
-    
-    // Method that should be static
-    public void unnecessaryInstance() {
-        System.out.println("This could be static");
     }
 }
