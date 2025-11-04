@@ -1,10 +1,16 @@
 package org.example;
 
+import java.sql.*;
 import java.util.Random;
 
 public class Main {
+    // TODO: Fix this later
+    private static String password = "admin123"; // Hardcoded password - security issue
+    private static Connection conn = null;
+    
     public static void main(String[] args) {
         int iterations = 10000;
+        String unused = "This variable is never used"; // Unused variable
 
         // Test de fonctionnalité
         System.out.println("=== Tests de fonctionnalité ===");
@@ -58,5 +64,52 @@ public class Main {
         }
         time += System.nanoTime();
         return time / 1e9;
+    }
+    
+    // Method with SQL injection vulnerability
+    public static void unsafeQuery(String userInput) {
+        try {
+            Statement stmt = conn.createStatement();
+            String query = "SELECT * FROM users WHERE name = '" + userInput + "'"; // SQL Injection
+            ResultSet rs = stmt.executeQuery(query);
+            // Resource leak - ResultSet and Statement not closed
+        } catch (Exception e) {
+            e.printStackTrace(); // Bad practice: printing stack trace
+        }
+    }
+    
+    // Method with complexity issues
+    public static int complexMethod(int a, int b, int c, int d) {
+        if (a > 0) {
+            if (b > 0) {
+                if (c > 0) {
+                    if (d > 0) {
+                        return a + b + c + d;
+                    } else {
+                        return a + b + c;
+                    }
+                } else {
+                    return a + b;
+                }
+            } else {
+                return a;
+            }
+        } else {
+            return 0;
+        }
+    }
+    
+    // Empty catch block
+    public static void methodWithEmptyCatch() {
+        try {
+            int result = 10 / 0;
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+    
+    // Method that should be static
+    public void unnecessaryInstance() {
+        System.out.println("This could be static");
     }
 }
